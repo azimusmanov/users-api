@@ -22,15 +22,25 @@ app.get("/", (req, res) => {
 });
 
 // GET /users/profiles -> return all users as JSON
+// TODO: DO A JOIN OP ON THE 2 USER TABLES LIKE BROCK SAID IN THE CORD
 app.get("/users/profiles", async (req, res) => {
   try {
     const { data, error } = await supabase
-    .from('user_profiles').select(`*`)
+    .from('user_profiles')
+.select('*, users!id(*)')
     if (error) {
       console.error("Supabase error:", error)
       return res.status(500).json({ error: error.message})
     }
-    res.json(data)
+    const flattened = data.map(profile => ({
+      ...profile,
+      username: profile.users?.username,
+      email: profile.users?.email,
+      users: undefined // removing nested object
+    }))
+    console.log("Raw data from Supabase:", data)
+    console.log("Flattened data:", flattened)
+    res.json(flattened)
   } catch (err){
     console.error("Erorr fetching users: ", err)
     res.status(500).json({ error: "Internal server error"})
