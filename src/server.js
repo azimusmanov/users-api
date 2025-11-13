@@ -33,7 +33,7 @@ app.get("/users/profiles", async (req, res) => {
       return res.status(500).json({ error: error.message})
     }
     const flattened = data.map(profile => ({
-      ...profile,
+      ...profile, // copies all existing fields
       username: profile.users?.username,
       email: profile.users?.email,
       users: undefined // removing nested object
