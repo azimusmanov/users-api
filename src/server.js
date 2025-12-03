@@ -27,7 +27,7 @@ app.get("/users/profiles", async (req, res) => {
   try {
     const { data, error } = await supabase
     .from('user_profiles')
-.select('*, users!id(*)')
+    .select('*, users!id(*)')
     if (error) {
       console.error("Supabase error:", error)
       return res.status(500).json({ error: error.message})
@@ -45,7 +45,6 @@ app.get("/users/profiles", async (req, res) => {
     console.error("Erorr fetching users: ", err)
     res.status(500).json({ error: "Internal server error"})
   }
-  
 })
 
 
